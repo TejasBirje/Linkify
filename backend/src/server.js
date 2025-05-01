@@ -8,10 +8,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001
 
+app.use(express.json());
+
 app.use("/api/auth", authRoutes)
 
 // Starts the Express server and listens for incoming requests on a specific port.
 app.listen(PORT, () => {
-    console.log(`Server running on PORT ${PORT}`)
+    console.log(`Server running on PORT ${PORT}, URL: http://localhost:5001`)
     connectDB();
 })

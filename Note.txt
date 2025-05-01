@@ -1,6 +1,0 @@
------------ Project Setup ------------
-1) make frontend, backend folders.
-2) in frontend, create vite reat app and in backend, initialize a nodejs app, by npm init -y
-3) Then copy paste the package.json, and npm install
-4) create src in backend 
-5) create express app
