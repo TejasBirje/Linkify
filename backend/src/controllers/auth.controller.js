@@ -141,6 +141,20 @@ export async function logout(req, res) {
 }
 
 export async function onboard(req, res) {
+
+    /*
+    1) Difference between req.user._id and req.user.id:
+
+    req.user._id is a MongoDB ObjectId
+    req.user.id is a string version of _id
+
+    2) Can you interchange them?
+
+    Yes, in most Mongoose queries — both work.
+    Be careful with comparisons (_id !== _id, use .toString() or .id)
+    Use .id for tokens, JSON responses, or string comparisons.
+    */
+
     try {
         const userId = req.user._id;
 
