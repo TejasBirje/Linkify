@@ -100,11 +100,11 @@ export async function acceptFriendRequest(req, res) {
 
         const friendRequest = await FriendRequest.findById(requestId);
 
-        if(!friendRequest) return res.status(404).json({ message: "Friend request not found" });
+        if (!friendRequest) return res.status(404).json({ message: "Friend request not found" });
 
         // check whether the current user is the recipient
-        if(friendRequest.recipient.toString() !== req.user.id) {
-            return res.status(403).json({ message: "You are not authorized to accept this request"})
+        if (friendRequest.recipient.toString() !== req.user.id) {
+            return res.status(403).json({ message: "You are not authorized to accept this request" })
         }
 
         friendRequest.status = "accepted";
@@ -124,6 +124,55 @@ export async function acceptFriendRequest(req, res) {
         res.status(200).json({ message: "Friend Request Accepted" });
     } catch (error) {
         console.log("Error in acceptFriendRequest controller: ", error);
-        res.status(500).json({ message: "Internal Server Error"});
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export async function getFriendRequests(req, res) {
+    try {
+        // Get all incoming friend requests sent to the current user that are still pending
+        const incomingReqs = await FriendRequest.find({
+            recipient: req.user.id,     // the logged-in user is the recipient
+            status: "pending",          // status is still pending
+        }).populate(
+            "sender",                   // populate the sender's details
+            "fullName profilePic nativeLanguage learningLanguage"  // only select these fields
+        );
+
+        // Get all friend requests sent by the current user that have been accepted
+        const acceptedReqs = await FriendRequest.find({
+            sender: req.user.id,        // the logged-in user is the sender
+            status: "accepted",         // status is accepted
+        }).populate(
+            "recipient",                // populate the recipient's details
+            "fullName profilePic"       // only select these fields
+        );
+
+        // Respond with both types of requests
+        res.status(200).json({ incomingReqs, acceptedReqs });
+
+    } catch (error) {
+        console.log("Error in getPendingFriendRequests controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export async function getOutgoingFriendReqs(req, res) {
+    try {
+        // Find all friend requests sent by the current user that are still pending
+        const outgoingRequests = await FriendRequest.find({
+            sender: req.user.id,       // current user is the sender
+            status: "pending",         // only include pending requests
+        }).populate(
+            "recipient",               // populate recipient's user details
+            "fullName profilePic nativeLanguage learningLanguage" // select these fields only
+        );
+
+        // Send the list of outgoing friend requests in the response
+        res.status(200).json(outgoingRequests);
+
+    } catch (error) {
+        console.log("Error in getOutgoingFriendReqs controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }

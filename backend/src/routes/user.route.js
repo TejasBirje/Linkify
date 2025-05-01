@@ -1,6 +1,6 @@
 import express from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
-import { acceptFriendRequest, getMyFriends, getRecommendedUsers, sendFriendRequest } from "../controllers/user.controller.js";
+import { acceptFriendRequest, getFriendRequest, getMyFriends, getOutgoingFriendReqs, getRecommendedUsers, sendFriendRequest } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
@@ -10,6 +10,10 @@ router.get("/", getRecommendedUsers);
 router.get("/friends", getMyFriends);
 
 router.post("/friend-request/:id", sendFriendRequest);
-router.post("friend-request/:id/accept", acceptFriendRequest);
+router.put("friend-request/:id/accept", acceptFriendRequest);
+
+// we need this to show all pending requests in out notifications page
+router.get("/friend-requests", getFriendRequest);
+router.get("/outgoing-friend-requests", getOutgoingFriendReqs);
 
 export default router;
