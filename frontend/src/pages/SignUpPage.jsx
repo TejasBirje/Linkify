@@ -3,6 +3,7 @@ import { Waypoints } from "lucide-react";
 import { Link } from 'react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { signup } from '../lib/api';
+import useSignup from '../hooks/useSignup';
 const SignUpPage = () => {
 
   const [signupData, setSignupData] = useState({
@@ -11,14 +12,14 @@ const SignUpPage = () => {
     password: "",
   });
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
-  const { mutate: signupMutation, isPending, error } = useMutation({
-    mutationFn: signup,  // coming from api.js
+  // const { mutate: signupMutation, isPending, error } = useMutation({
+  //   mutationFn: signup,  // coming from api.js
 
-    // on success, we want to call the /auth/me to get the authUser, and be redirected to the HomePage. (Go see App.jsx)
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] })
-  })
+  //   // on success, we want to call the /auth/me to get the authUser, and be redirected to the HomePage. (Go see App.jsx)
+  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] })
+  // })
 
   /* 
   Here we were directly writing the function here, which is not ideal, so we put it in a different file, api.js file. To make it cleaner
@@ -32,9 +33,11 @@ const SignUpPage = () => {
 
   */
 
+  const {error, isPending, signUpMutation} = useSignup();
+
   const handleSignup = (e) => {
     e.preventDefault();  // so it does not refresh
-    signupMutation(signupData);  // calls the mutationFn() in the useQuery({}), which is in api.js
+    signUpMutation(signupData);  // calls the mutationFn() in the useQuery({}), which is in api.js
   }
 
   return (
