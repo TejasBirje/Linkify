@@ -8,18 +8,34 @@ import CallPage from './pages/CallPage'
 import ChatPage from './pages/ChatPage'
 import OnboardingPage from './pages/OnboardingPage'
 import { Toaster } from 'react-hot-toast'
+import { useQuery } from '@tanstack/react-query'
+import { axiosInstance } from './lib/axios.js'
 
 const App = () => {
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["todos"],
+
+    queryFn: async () => {
+      const res = await axiosInstance.get("http://localhost:5001/api/auth/me");
+
+      return res.data;
+    },
+    retry: false,
+  });
+
+  console.log(data);
+
   return (
     <div className="h-screen" data-theme="coffee">
       <Routes>
-        <Route path="" element={<HomePage/>} />
-        <Route path="/signup" element={<SignUpPage/>} />
-        <Route path="/login" element={<LoginPage/>} />
-        <Route path="/notifications" element={<NotificationsPage/>} />
-        <Route path="/call" element={<CallPage/>} />
-        <Route path="/chat" element={<ChatPage/>} />
-        <Route path="/onboarding" element={<OnboardingPage/>} />
+        <Route path="" element={<HomePage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/call" element={<CallPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/onboarding" element={<OnboardingPage />} />
       </Routes>
 
       <Toaster />
