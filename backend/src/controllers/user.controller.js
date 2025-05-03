@@ -54,7 +54,7 @@ export async function sendFriendRequest(req, res) {
         const { id: recipientId } = req.params;
 
         // prevent sending request to yourself
-        if (!myId === recipientId) {
+        if (myId === recipientId) {
             return res.status(400).json({ message: "You cannot send request to yourself" });
         }
 
@@ -73,7 +73,7 @@ export async function sendFriendRequest(req, res) {
         const existingRequest = await FriendRequest.findOne({
             $or: [
                 { sender: myId, recipient: recipientId },  // the request I sent to them
-                { sender: recipient, recipient: myId }  // the request they sent to me 
+                { sender: recipientId, recipient: myId }  // the request they sent to me 
             ]
         })
 
@@ -159,18 +159,12 @@ export async function getFriendRequests(req, res) {
 
 export async function getOutgoingFriendReqs(req, res) {
     try {
-        // Find all friend requests sent by the current user that are still pending
         const outgoingRequests = await FriendRequest.find({
-            sender: req.user.id,       // current user is the sender
-            status: "pending",         // only include pending requests
-        }).populate(
-            "recipient",               // populate recipient's user details
-            "fullName profilePic nativeLanguage learningLanguage" // select these fields only
-        );
+            sender: req.user.id,
+            status: "pending",
+        }).populate("recipient", "fullName profilePic nativeLanguage learningLanguage");
 
-        // Send the list of outgoing friend requests in the response
         res.status(200).json(outgoingRequests);
-
     } catch (error) {
         console.log("Error in getOutgoingFriendReqs controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
