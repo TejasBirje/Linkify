@@ -38,7 +38,7 @@ const Navbar = () => {
           )}
 
           {/* RIGHT SIDE ITEMS WITH PROPER SPACING */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 ml-auto">
             {/* NOTIFICATIONS BUTTON */}
             <Link to={"/notifications"}>
               <button className="btn btn-circle">
