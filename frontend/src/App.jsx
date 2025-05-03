@@ -12,6 +12,7 @@ import PageLoader from './components/PageLoader.jsx'
 import useAuthUser from './hooks/useAuthUser.js'
 import Layout from './components/Layout.jsx'
 import useThemeStore from './store/useThemeStore.js'
+import FriendsPage from './pages/FriendsPage.jsx'
 
 const App = () => {
 
@@ -55,11 +56,20 @@ const App = () => {
           )}
         />
 
-        <Route path="/call" element={
-          isAuthenticated && isOnboarded ? (
-            <Layout showSidebar={false}>
-              <CallPage />
+        <Route
+          path="/friends"
+          element={isAuthenticated && isOnboarded ? (
+            <Layout showSidebar={true}>
+              <FriendsPage />
             </Layout>
+          ) : (
+            <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+          )}
+        />
+
+        <Route path="/call/:id" element={
+          isAuthenticated && isOnboarded ? (
+              <CallPage />
           ) : (
             <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
           )
