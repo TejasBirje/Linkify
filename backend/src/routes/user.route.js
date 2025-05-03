@@ -10,7 +10,7 @@ router.get("/", getRecommendedUsers);
 router.get("/friends", getMyFriends);
 
 router.post("/friend-request/:id", sendFriendRequest);
-router.put("friend-request/:id/accept", acceptFriendRequest);
+router.put("/friend-request/:id/accept", acceptFriendRequest);
 
 // we need this to show all pending requests in out notifications page
 router.get("/friend-requests", getFriendRequests);
