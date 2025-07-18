@@ -36,8 +36,8 @@ const OnboardingPage = () => {
   }
 
   const handleRandomAvatar = () => {
-    const idx = Math.floor(Math.random() * 100) + 1;  // between [1,100]
-    const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`  // out of 100 avatars, one is randomly taken
+    const idx = Math.floor(Math.random() * 1000) + 1;  // between [1,100]
+    const randomAvatar = `https://i.pravatar.cc/${idx}`  // out of 100 avatars, one is randomly taken
     setFormState({ ...formState, profilePic: randomAvatar });  // update the avatar in the state 
     toast.success("Avatar Generated!");
   }
